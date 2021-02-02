@@ -1,5 +1,6 @@
 package utils
 
+// general utils package
 import (
 	"os"
 	"strings"

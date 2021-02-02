@@ -19,7 +19,7 @@ func init() {
 		utils.GetEnv("DB_USER", "root"),
 		utils.GetEnv("DB_PASS", "password"),
 		utils.JoinString(
-			utils.GetEnv("DB_HOST", "localhost"),
+			utils.GetEnv("DB_HOST", "localhost"), ":",
 			utils.GetEnv("DB_PORT", "3306")),
 		utils.GetEnv("DB_NAME", "ffxblue-articles"),
 	)
@@ -30,7 +30,10 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	defer Client.Close()
+
+	// We are reusing the Client therefore,
+	// closing is not necessary. :)
+	// defer Client.Close()
 
 	if err = Client.Ping(); err != nil {
 		panic(err)

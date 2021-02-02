@@ -1,7 +1,7 @@
 
 /* DROP TABLE IF EXISTS `articles`; */
 
-CREATE TABLE IF NOT EXISTS `page` (
+CREATE TABLE IF NOT EXISTS `articles` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `title` mediumtext NOT NULL,
     `body` longtext NOT NULL,
@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS `tag_relation` (
     FOREIGN KEY(article_id)
         REFERENCES articles(id)
         ON DELETE CASCADE,
-
     FOREIGN KEY (tag_id)
         REFERENCES tags(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

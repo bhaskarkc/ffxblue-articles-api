@@ -4,8 +4,9 @@ import "time"
 
 // https://golang.org/pkg/time/#pkg-constants
 const (
-	apiDateLayout = "2006-01-02T15:04:05.000Z"
-	apiDbLayout   = "2006-01-02 15:04:05"
+	apiDateLayout    = "2006-01-02T15:04:05.000Z"
+	apiDbLayout      = "2006-01-02 15:04:05"
+	tagsDateURIParam = "20060102"
 )
 
 func GetNow() time.Time {
@@ -18,13 +19,4 @@ func GetNowString() string {
 
 func GetNowDBFormat() string {
 	return GetNow().Format(apiDbLayout)
-}
-
-// https://golang.org/pkg/time/#Parse
-func Validate(date string) bool {
-	_, err := time.Parse(apiDateLayout, date)
-	if err != nil {
-		return false
-	}
-	return true
 }

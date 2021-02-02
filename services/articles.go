@@ -1,7 +1,10 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/bhaskarkc/ffxblue-article-api/domain/articles"
+	"github.com/bhaskarkc/ffxblue-article-api/domain/tags"
 	"github.com/bhaskarkc/ffxblue-article-api/utils/date"
 	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
 )
@@ -34,7 +37,31 @@ func (s *articleService) Create(article articles.Article) (*articles.Article, *e
 	if err := article.Save(); err != nil {
 		return nil, err
 	}
-	// TODO: insert Tags and tags relation.
+
+	var tag = &tags.Tag{}
+	var err = &errors.RestErr{}
+	for _, tagName := range article.Tags {
+		tag.Name = tagName
+		if !tag.Exists() {
+			tag, err = TagService.Create(*tag)
+			fmt.Println(tag)
+			if err != nil {
+				// TODO: remove tagName from article struct
+				continue
+			}
+		}
+
+		tagRelation := tags.TagRel{
+			ArticleId: article.Id,
+			TagId:     tag.Id,
+			Date:      date.GetNowString(),
+		}
+		fmt.Println(tagRelation)
+
+		if _, err := TagService.CreateTagRelation(tagRelation); err != nil {
+			return nil, err
+		}
+	}
 	return &article, nil
 }
 
