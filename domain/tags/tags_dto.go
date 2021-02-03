@@ -48,10 +48,6 @@ func (tagRelation *TagRel) Validate() *errors.RestErr {
 	if tagRelation.TagId < 1 {
 		return errors.NewBadRequestError("TagId for tag relation can not empty")
 	}
-
-	// if tagRelation.Date != "" {
-	// 	return errors.NewBadRequestError("Date for tag relation can not be empty")
-	// }
 	return nil
 }
 

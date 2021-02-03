@@ -1,0 +1,47 @@
+---
+version: "3.5"
+services:
+  articles_api:
+    container_name: ffxblue-articles-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: server
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file:
+      - ./.env
+    volumes:
+      - ./.:/app/:rw
+    depends_on:
+      - db
+        # condition: service_healthy
+
+    extra_hosts:
+      - "local.articles-api.com.au:127.0.0.1"
+    networks:
+      - ffxblue-network
+    command: [ "./scripts/wait-for-it.sh", "db:3306", "--", "./scripts/entrypoint.sh" ]
+
+  db:
+    container_name: ffxblue-api-db
+    image: mysql:5.6
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    environment:
+      - MYSQL_DATABASE=${DB_NAME:-ffxblue}
+      - MYSQL_USER=${DB_USER:-ffxblue}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+    networks:
+      - ffxblue-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 20s
+      retries: 10
+
+networks:
+  ffxblue-network:
+    name: ffxblue-article-api
+    driver: "bridge"
