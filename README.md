@@ -50,7 +50,7 @@ I have made few assumptions to build this API.
 
 ## Setup/Installation
 
-### Pre-requisites
+### Prerequisites
 
 - `make`
   - Mac OS (`brew install make`)
