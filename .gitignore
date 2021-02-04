@@ -19,3 +19,4 @@ vendor/
 .pid
 todo.md
 *.todo.md
+testdata/mysql/
