@@ -1,6 +1,3 @@
-VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null || echo "1.0.0")
-PACKAGES := $(shell go list ./... | grep -v /vendor/)
-
 ## Load .env
 ifneq (,$(wildcard ./.env))
     include .env
@@ -8,33 +5,19 @@ ifneq (,$(wildcard ./.env))
 endif
 
 DSN="mysql://${DB_USER}:${DB_PASS}@tcp(${DB_HOST}:${DB_PORT})/${DB_NAME}"
-
-# https://github.com/golang-migrate/migrate#cli-usage
+PACKAGES := $(shell go list ./... | grep -v /vendor/)
 MIGRATE := docker run -t -v $(shell pwd)/migrations:/migrations --network host migrate/migrate:v4.14.1 -path=/migrations/ -database ${DSN}
-
 PID_FILE := './.pid'
-FSWATCH_FILE := './fswatch.cfg'
 
 .PHONY: default
 default: help
 
 .PHONY: help
-help: ## Prints this help screen.
+help: ## prints this help screen.
 	@printf "================================================\t\t\n"
 	@printf "\t FFXBlue Articles API \t\t\n"
 	@printf "================================================\t\t\n"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sed -e "s/Makefile://" | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
-
-.PHONY: test
-test: ## run unit tests
-	@echo "mode: count" > coverage-all.out
-	@$(foreach pkg,$(PACKAGES), \
-		go test -p=1 -cover -covermode=count -coverprofile=coverage.out ${pkg}; \
-		tail -n +2 coverage.out >> coverage-all.out;)
-
-.PHONY: test-cover
-test-cover: test ## run unit tests and show test coverage information
-	go tool cover -html=coverage-all.out
 
 .PHONY: run
 run: ## run the API server
@@ -56,47 +39,77 @@ run-live: ## run the API server with live reload support (requires fswatch)
 build:  ## build the API server binary
 	CGO_ENABLED=0 go build -a -o api-server .
 
+# ------------ Commands running Docker compose ------------
 .PHONY: up
-up: ## Spins up docker container
+up: ## Spins up docker container (docker-compose)
 	docker-compose up --build
 
+.PHONY: stop
+stop: ## Stop docker containers (docker-compose)
+	docker-compose stop
+
 .PHONY: down
-down: ## Tear down the docker container
+down: ## Tear down the docker container (docker-compose)
 	docker-compose down
 
+.PHONY: recreate (docker-compose)
 recreate: ## Force recreate and start the docker container
 	docker-compose up --build --force-recreate
 
-dbshow: ## Show tables
-	docker exec -it $(appContainer) bash -c 'mysqlshow $(containerDbCred) $(filter-out $@,$(MAKECMDGOALS))'
+# ------------------------------------------------
 
-dbschema: ## Dump mysql db
-	docker exec -it $(appContainer) bash -c 'mysqldump ${containerDbCred}  ${DB_DATABASE}'
-
+# ------------       Docker         ------------
 .PHONY: build-docker
-build-docker: ## build the API server as a docker image
+build-docker-image: ## build the API server as a docker image
 	docker build -f Dockerfile -t api-server .
 
-.PHONY: clean
-clean: ## remove temporary files
-	rm -rf api-server coverage.out coverage-all.out
+.PHONY: run-docker
+run-docker: build-docker-image ## Run application docker container.
+	docker run --rm --env-file=.env --network=host --name ffxblue-api-server api-server
 
 .PHONY: db-start
 db-start: ## start the database server
 	@mkdir -p testdata/mysql
-	docker run --rm --name mysqlContainer -v $(shell pwd)/testdata:/testdata \
+	docker run --rm --name ffxblue-mysql-test \
+		-v $(shell pwd)/testdata:/testdata \
 		-v $(shell pwd)/testdata/mysql:/var/lib/mysql/data \
-		-e MYSQL_PASSWORD=mysql -e MYSQL_DB=ffxblue-articles -d -p 3306:3306 mysql
+		-e MYSQL_USER=${DB_USER} \
+		-e MYSQL_PASSWORD=${DB_PASS} \
+		-e MYSQL_DATABASE=${DB_NAME} \
+		-e MYSQL_ALLOW_EMPTY_PASSWORD=false \
+		-p 3306:3306 mysql:5.6
+
+.PHONY: db-host-ip
+db-host-ip:
+	$(eval IP = $(shell docker inspect --format '{{ .NetworkSettings.IPAddress }}' ffxblue-mysql-test))
+	@$(eval DB_HOST=$(IP))
+	@echo -n ${IP}
 
 .PHONY: db-stop
 db-stop: ## stop the database server
-	docker stop mysqlContainer
+	docker stop ffxblue-mysql-test
 
+# ------------------------------------------------
 .PHONY: testdata
 testdata: ## populate the database with test data
 	make migrate-down
 	@echo "Populating test data..."
-	@docker exec -it mysqlContainer mysql "$(APP_DSN)" -f /testdata/testdata.sql
+	@docker exec -it ffxblue-mysql-test mysql "$(DSN)" -f /testdata/testdata.sql
+
+.PHONY: test
+test: ## run unit tests
+	@echo "mode: count" > coverage-all.out
+	@$(foreach pkg,$(PACKAGES), \
+		go test -p=1 -cover -covermode=count -coverprofile=coverage.out ${pkg}; \
+		tail -n +2 coverage.out >> coverage-all.out;)
+
+.PHONY: test-cover
+test-cover: test ## run unit tests and show test coverage information
+	go tool cover -html=coverage-all.out
+
+.PHONY: clean
+clean: ## remove temporary files
+	rm -rf api-server coverage.out coverage-all.out
 
 .PHONY: lint
 lint: ## run golint on all Go package

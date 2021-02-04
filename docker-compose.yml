@@ -7,6 +7,7 @@ services:
       context: ./
       dockerfile: Dockerfile
       target: server
+    working_dir: /app
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     env_file:
@@ -15,10 +16,6 @@ services:
       - ./.:/app/:rw
     depends_on:
       - db
-        # condition: service_healthy
-
-    extra_hosts:
-      - "local.articles-api.com.au:127.0.0.1"
     networks:
       - ffxblue-network
     command: [ "./scripts/wait-for-it.sh", "db:3306", "--", "./scripts/entrypoint.sh" ]
@@ -43,5 +40,5 @@ services:
 
 networks:
   ffxblue-network:
-    name: ffxblue-article-api
+    name: ffxblue-articles-api
     driver: "bridge"

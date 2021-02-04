@@ -34,4 +34,4 @@ COPY --from=build /app/migrations ./migrations/
 COPY --from=build /app/api-server /usr/local/bin
 COPY --from=build /app/scripts/entrypoint.sh .
 
-ENTRYPOINT ["./scripts/entrypoint.sh"]
+CMD ["/bin/bash", "/app/entrypoint.sh"]

@@ -4,12 +4,6 @@
 
 # set -e
 
-# Logging
-# i. Write stdout to entry.log
-# ii.System's logger reads entry.log and writes log into system log tags
-# iii. errors are redirected to stdout
-exec > >(tee -a /var/log/app/entry.log|logger -t server -s 2>/dev/console) 2>&1
-
 APP_ENV=${APP_ENV:-local}
 
 echo "[`date`] Running entrypoint script in the '${APP_ENV}' environment..."
@@ -21,5 +15,7 @@ echo "[`date`] Running DB migrations..."
 migrate -database "${DSN}" -path ./migrations up
 
 echo "[`date`] Starting server..."
+
+ln -sf /dev/stdout /var/log/app/server.log
 
 api-server >> /var/log/app/server.log 2>&1
