@@ -38,11 +38,11 @@ Example: Tag details response JSON: `/tags/health/20160922`
 
 I have made few assumptions to build this API.
 
-    - While creating article it is passed with tags in CSV format.
-    - Tags are stored in a separated table once new tag is submitted `/articles` -> `POST` request.
-    - Relation between newly created article and tag is stored in `tag_relation` table.
-    - Updating Tags from `tags` table will reflect in both `articles` and `tag_relation`.
-    - When an article is deleted, respective row in `tag_relation` will be deleted.
+- While creating article it is passed with tags in CSV format.
+- Tags are stored in a separated table once new tag is submitted `/articles` -> `POST` request.
+- Relation between newly created article and tag is stored in `tag_relation` table.
+- Updating Tags from `tags` table will reflect in both `articles` and `tag_relation`.
+- When an article is deleted, respective row in `tag_relation` will be deleted.
 
 ### DB Diagram
 
@@ -102,11 +102,7 @@ for handling all migrations.
 
 ## Design Principle
 
-I am learning DDD (Domain Driven Design) hence,
-tried to implement the concept of DDD as much as I can.
-The reason I have choosen this approach is beacause this application can grow
-bigger in future.
-The key benefit of domain driven design is writing software that can evolve and change over time
+Implemented `MVC` pattern for the development.
 
 ## Error Handling
 
