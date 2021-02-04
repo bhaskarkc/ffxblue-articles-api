@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bhaskarkc/ffxblue-article-api/services"
-	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
+	"github.com/bhaskarkc/ffxblue-articles-api/services"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
 	"github.com/gin-gonic/gin"
 )
 

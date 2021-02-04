@@ -3,8 +3,8 @@ package services
 import (
 	"fmt"
 
-	"github.com/bhaskarkc/ffxblue-article-api/domain/tags"
-	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
+	"github.com/bhaskarkc/ffxblue-articles-api/domain/tags"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
 )
 
 var TagService tagServiceInterface = &tagService{}

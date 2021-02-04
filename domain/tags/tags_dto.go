@@ -3,7 +3,7 @@ package tags
 import (
 	"time"
 
-	errors "github.com/bhaskarkc/ffxblue-article-api/utils/errors"
+	errors "github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
 )
 
 type Tag struct {

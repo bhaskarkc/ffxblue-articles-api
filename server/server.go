@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/bhaskarkc/ffxblue-article-api/utils"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils"
 	"github.com/gin-gonic/gin"
 )
 

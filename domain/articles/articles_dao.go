@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"strings"
 
-	dbconn "github.com/bhaskarkc/ffxblue-article-api/datasource/mysql"
-	"github.com/bhaskarkc/ffxblue-article-api/logger"
-	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
-	mysql_utils "github.com/bhaskarkc/ffxblue-article-api/utils/mysql"
+	dbconn "github.com/bhaskarkc/ffxblue-articles-api/datasource/mysql"
+	"github.com/bhaskarkc/ffxblue-articles-api/logger"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
+	mysql_utils "github.com/bhaskarkc/ffxblue-articles-api/utils/mysql"
 )
 
 const (

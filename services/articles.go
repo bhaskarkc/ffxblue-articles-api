@@ -3,10 +3,10 @@ package services
 import (
 	"fmt"
 
-	"github.com/bhaskarkc/ffxblue-article-api/domain/articles"
-	"github.com/bhaskarkc/ffxblue-article-api/domain/tags"
-	"github.com/bhaskarkc/ffxblue-article-api/utils/date"
-	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
+	"github.com/bhaskarkc/ffxblue-articles-api/domain/articles"
+	"github.com/bhaskarkc/ffxblue-articles-api/domain/tags"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/date"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
 )
 
 var ArticleService articleServiceInterface = &articleService{}

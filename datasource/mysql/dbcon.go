@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/bhaskarkc/ffxblue-article-api/utils"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils"
 	_ "github.com/go-sql-driver/mysql"
 )
 

@@ -3,7 +3,7 @@ package mysql_utils
 import (
 	"strings"
 
-	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
 	"github.com/go-sql-driver/mysql"
 )
 

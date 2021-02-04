@@ -3,7 +3,7 @@ package articles
 import (
 	"strings"
 
-	"github.com/bhaskarkc/ffxblue-article-api/utils/errors"
+	"github.com/bhaskarkc/ffxblue-articles-api/utils/errors"
 )
 
 type Article struct {

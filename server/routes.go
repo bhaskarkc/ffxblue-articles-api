@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/bhaskarkc/ffxblue-article-api/controllers/articles"
-	"github.com/bhaskarkc/ffxblue-article-api/controllers/healthcheck"
-	"github.com/bhaskarkc/ffxblue-article-api/controllers/tags"
+	"github.com/bhaskarkc/ffxblue-articles-api/controllers/articles"
+	"github.com/bhaskarkc/ffxblue-articles-api/controllers/healthcheck"
+	"github.com/bhaskarkc/ffxblue-articles-api/controllers/tags"
 )
 
 func registerRoutes() {

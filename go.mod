@@ -1,4 +1,4 @@
-module github.com/bhaskarkc/ffxblue-article-api
+module github.com/bhaskarkc/ffxblue-articles-api
 
 go 1.15
 
